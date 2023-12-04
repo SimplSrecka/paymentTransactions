@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 
+import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import si.fri.rso.simplsrecka.transaction.lib.Transaction;
@@ -34,7 +35,7 @@ public class TransactionBean {
         return resultList.stream().map(TransactionConverter::toDto).collect(Collectors.toList());
     }
 
-    @Timed
+    @Timed(name = "get_transactions_filter")
     public List<Transaction> getTransactionsFilter(UriInfo uriInfo) {
         QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).defaultOffset(0).build();
         return JPAUtils.queryEntities(em, TransactionEntity.class, queryParameters).stream()
@@ -49,6 +50,7 @@ public class TransactionBean {
         return TransactionConverter.toDto(transactionEntity);
     }
 
+    @Gauge(name = "create_transaction", unit = "MetricUnits.NONE")
     public Transaction createTransaction(Transaction transaction) {
         TransactionEntity transactionEntity = TransactionConverter.toEntity(transaction);
         try {
