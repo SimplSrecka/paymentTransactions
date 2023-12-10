@@ -1,5 +1,6 @@
 package si.fri.rso.simplsrecka.transaction.api.v1.resources;
 
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import com.kumuluz.ee.logs.cdi.Log;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -10,6 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import si.fri.rso.simplsrecka.transaction.lib.Transaction;
 import si.fri.rso.simplsrecka.transaction.services.beans.TransactionBean;
 
@@ -21,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -29,6 +32,8 @@ import java.util.logging.Logger;
 @Path("/transactions")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Transactions", description = "APIs for transaction operations")
+@CrossOrigin(supportedMethods = "GET, POST, PUT, DELETE, HEAD, OPTIONS", allowOrigin = "*")
 public class TransactionResource {
 
     private Logger log = Logger.getLogger(TransactionResource.class.getName());
@@ -39,93 +44,76 @@ public class TransactionResource {
     @Context
     protected UriInfo uriInfo;
 
-    @Operation(description = "Get all transactions.", summary = "Get all transactions")
+    @Operation(description = "Retrieves all transactions.", summary = "Retrieve all transactions")
     @APIResponses({
             @APIResponse(responseCode = "200",
-                    description = "List of transactions",
+                    description = "Successful retrieval of transaction list",
                     content = @Content(schema = @Schema(implementation = Transaction.class, type = SchemaType.ARRAY)),
-                    headers = {@Header(name = "X-Total-Count", description = "Number of transactions in list")}
-            )
+                    headers = {@Header(name = "X-Total-Count", description = "Total number of transactions")}
+            ),
+            @APIResponse(responseCode = "500",
+                    description = "Internal Server Error")
     })
     @GET
     public Response getTransactions() {
-        List<Transaction> transactions = transactionBean.getAllTransactions();
-        return Response.status(Response.Status.OK).entity(transactions).build();
+        try {
+            List<Transaction> transactions = transactionBean.getAllTransactions();
+            return Response.ok(transactions).build();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error fetching transactions", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    @Operation(description = "Get details for a specific transaction.", summary = "Get transaction details")
+    @Operation(description = "Get all transactions for a specific user.", summary = "Get user's transactions")
     @APIResponses({
             @APIResponse(responseCode = "200",
-                    description = "Transaction details",
-                    content = @Content(schema = @Schema(implementation = Transaction.class))
-            ),
-            @APIResponse(responseCode = "404", description = "Transaction not found")
+                    description = "All transaction for specific user",
+                    content = @Content(schema = @Schema(implementation = Transaction.class))),
+            @APIResponse(responseCode = "404",
+                    description = "User doesn't exists"),
+            @APIResponse(responseCode = "500",
+                    description = "Internal Server Error")
     })
     @GET
-    @Path("/{transactionId}")
-    public Response getTransaction(@Parameter(description = "Transaction ID.", required = true)
-                                   @PathParam("transactionId") Integer transactionId) {
-        Transaction transaction = transactionBean.getTransaction(transactionId);
-        if (transaction == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+    @Path("/{userId}")
+    public Response getTransactions(@Parameter(description = "User ID.", required = true)
+                                   @PathParam("userId") Integer userId) {
+        try {
+            List<Transaction> transactions = transactionBean.getTransactions(userId);
+            if (transactions.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No transactions found for user ID: " + userId).build();
+            }
+            return Response.ok(transactions).build();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error fetching transactions for user", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.status(Response.Status.OK).entity(transaction).build();
     }
 
     @Operation(description = "Add a new transaction.", summary = "Add transaction")
     @APIResponses({
-            @APIResponse(responseCode = "201", description = "Transaction successfully added"),
-            @APIResponse(responseCode = "400", description = "Invalid transaction data")
+            @APIResponse(responseCode = "201",
+                    description = "Transaction successfully added"),
+            @APIResponse(responseCode = "400",
+                    description = "Invalid transaction data"),
+            @APIResponse(responseCode = "500",
+                    description = "Internal Server Error")
     })
     @POST
     public Response createTransaction(@RequestBody(description = "DTO object with transaction details.",
             required = true,
             content = @Content(schema = @Schema(implementation = Transaction.class)))
                                           Transaction transaction) {
-        if (transaction == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        try {
+            if (transaction == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            transaction = transactionBean.createTransaction(transaction);
+            return Response.status(Response.Status.CREATED).entity(transaction).build();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error creating transaction", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        transaction = transactionBean.createTransaction(transaction);
-        return Response.status(Response.Status.CREATED).entity(transaction).build();
-    }
-
-    @Operation(description = "Update details for a specific transaction.", summary = "Update transaction")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Transaction successfully updated"),
-            @APIResponse(responseCode = "404", description = "Transaction not found"),
-            @APIResponse(responseCode = "400", description = "Invalid transaction data")
-    })
-    @PUT
-    @Path("/{transactionId}")
-    public Response updateTransaction(@Parameter(description = "Transaction ID.", required = true)
-                                      @PathParam("transactionId") Integer transactionId,
-                                      @RequestBody(description = "DTO object with updated transaction details.",
-                                              required = true,
-                                              content = @Content(schema = @Schema(implementation = Transaction.class)))
-                                      Transaction transaction) {
-        if (transaction == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        Transaction updatedTransaction = transactionBean.updateTransaction(transactionId, transaction);
-        if (updatedTransaction == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.status(Response.Status.OK).entity(updatedTransaction).build();
-    }
-
-    @Operation(description = "Delete a specific transaction.", summary = "Delete transaction")
-    @APIResponses({
-            @APIResponse(responseCode = "204", description = "Transaction successfully deleted"),
-            @APIResponse(responseCode = "404", description = "Transaction not found")
-    })
-    @DELETE
-    @Path("/{transactionId}")
-    public Response deleteTransaction(@Parameter(description = "Transaction ID.", required = true)
-                                      @PathParam("transactionId") Integer transactionId) {
-        boolean deleted = transactionBean.deleteTransaction(transactionId);
-        if (!deleted) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

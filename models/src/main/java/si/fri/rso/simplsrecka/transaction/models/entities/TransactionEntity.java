@@ -8,7 +8,9 @@ import java.time.Instant;
 @NamedQueries(value =
         {
                 @NamedQuery(name = "TransactionEntity.getAll",
-                        query = "SELECT t FROM TransactionEntity t")
+                        query = "SELECT t FROM TransactionEntity t"),
+                @NamedQuery(name = "TransactionEntity.getByUserId",
+                        query = "SELECT t FROM TransactionEntity t WHERE t.userId = :userId")
         })
 public class TransactionEntity {
 
@@ -22,25 +24,19 @@ public class TransactionEntity {
     @Column(name = "amount")
     private Double amount;
 
+    @Column(name = "paid_combination")
+    private String paidCombination;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private TransactionType type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private TransactionStatus status;
-
     @Column(name = "transaction_date")
     private Instant transactionDate;
 
-    // Enum za tip transakcije
-    public enum TransactionType {
-        DEPOSIT, WITHDRAWAL
-    }
 
-    // Enum za status transakcije
-    public enum TransactionStatus {
-        PENDING, COMPLETED, FAILED
+    public enum TransactionType {
+        DEPOSIT_COMBINATION, DEPOSIT, WITHDRAWAL
     }
 
 
@@ -60,6 +56,14 @@ public class TransactionEntity {
         this.userId = userId;
     }
 
+    public String getPaidCombination() {
+        return paidCombination;
+    }
+
+    public void setPaidCombination(String paidCombination) {
+        this.paidCombination = paidCombination;
+    }
+
     public Double getAmount() {
         return amount;
     }
@@ -74,14 +78,6 @@ public class TransactionEntity {
 
     public void setType(TransactionType type) {
         this.type = type;
-    }
-
-    public TransactionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TransactionStatus status) {
-        this.status = status;
     }
 
     public Instant getTransactionDate() {

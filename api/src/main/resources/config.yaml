@@ -4,35 +4,51 @@ kumuluzee:
     name: dev
   version: 1.0.0
   server:
-    #base-url: http://localhost:8080
-    base-url: http://20.241.221.65:8080
+    base-url: http://localhost:8082
+    #base-url: http://20.241.221.65:8082
     http:
-      port: 8080
+      port: 8082
   datasources:
     - jndi-name: jdbc/TransactionDS
-      #connection-url: jdbc:postgresql://localhost:5432/lottery-ticket
-      connection-url: jdbc:postgresql://sqlsimplsrecka.postgres.database.azure.com:5432/lottery-ticket
-      username: lukaariana
-      password:  ${{ secrets.AZURE_CREDENTIALS }}
-      #username: dbuser
-      #password: postgres
+      connection-url: jdbc:postgresql://localhost:5432/lottery-ticket
+      #connection-url: jdbc:postgresql://sqlsimplsrecka.postgres.database.azure.com:5432/lottery-ticket
+      #username: lukaariana
+      #password:  ${{ secrets.AZURE_CREDENTIALS }}
+      username: dbuser
+      password: postgres
+      pool:
+        max-size: 4
+  dev:
+    scan-libraries:
+      - transaction-models
+      - transaction-services
+      - transaction-lib
+  openapi-mp:
+    ui:
+      specification-server: http://localhost:8082
+      #specification-server: http://20.246.199.143:8082
+    swagger-ui:
+      path: /api-specs/ui
   health:
     checks:
       data-source-health-check:
         type: liveness
         jndi-name: jdbc/TransactionDS
+      disk-space-health-check:
+        threshold: 100000000
+        type: liveness
   metrics:
     web-instrumentation:
       - name: transaction-endpoint
         url-pattern: /v1/transaction/*
   logs:
     config-file: '<?xml version="1.0" encoding="UTF-8"?>
-                            <Configuration name="comments">
+                            <Configuration name="SimplSrecka">
                                 <Appenders>
                                     <Console name="console" target="SYSTEM_OUT">
                                         <PatternLayout pattern="%d %p %marker %m %X %ex %n"/>
                                     </Console>
-                                    <Socket name="SimplSrecka" host="4dd8db1a-6ae2-4cfc-81a7-c9d1cf9dda97-ls.logit.io"
+                                    <Socket name="logstash" host="4dd8db1a-6ae2-4cfc-81a7-c9d1cf9dda97-ls.logit.io"
                                     port="32633" protocol="udp">
                                         <JSONLayout complete="false" compact="true" eventEol="true" charset="UTF-8" properties="true"/>
                                     </Socket>

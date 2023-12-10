@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
 
-import org.eclipse.microprofile.metrics.annotation.Gauge;
+import org.eclipse.microprofile.metrics.annotation.Metered;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import si.fri.rso.simplsrecka.transaction.lib.Transaction;
@@ -35,22 +35,15 @@ public class TransactionBean {
         return resultList.stream().map(TransactionConverter::toDto).collect(Collectors.toList());
     }
 
-    @Timed(name = "get_transactions_filter")
-    public List<Transaction> getTransactionsFilter(UriInfo uriInfo) {
-        QueryParameters queryParameters = QueryParameters.query(uriInfo.getRequestUri().getQuery()).defaultOffset(0).build();
-        return JPAUtils.queryEntities(em, TransactionEntity.class, queryParameters).stream()
-                .map(TransactionConverter::toDto).collect(Collectors.toList());
+    @Timed(name = "get_user_transactions")
+    public List<Transaction> getTransactions(Integer userId) {
+        TypedQuery<TransactionEntity> query = em.createNamedQuery("TransactionEntity.getByUserId", TransactionEntity.class);
+        query.setParameter("userId", userId);
+        List<TransactionEntity> resultList = query.getResultList();
+        return resultList.stream().map(TransactionConverter::toDto).collect(Collectors.toList());
     }
 
-    public Transaction getTransaction(Integer id) {
-        TransactionEntity transactionEntity = em.find(TransactionEntity.class, id);
-        if (transactionEntity == null) {
-            throw new NotFoundException();
-        }
-        return TransactionConverter.toDto(transactionEntity);
-    }
-
-    @Gauge(name = "create_transaction", unit = "MetricUnits.NONE")
+    @Metered(name = "create_transaction")
     public Transaction createTransaction(Transaction transaction) {
         TransactionEntity transactionEntity = TransactionConverter.toEntity(transaction);
         try {
@@ -64,39 +57,6 @@ public class TransactionBean {
             throw new RuntimeException("Entity was not persisted");
         }
         return TransactionConverter.toDto(transactionEntity);
-    }
-
-    public Transaction updateTransaction(Integer id, Transaction transaction) {
-        TransactionEntity entity = em.find(TransactionEntity.class, id);
-        if (entity == null) {
-            return null;
-        }
-        TransactionEntity updatedEntity = TransactionConverter.toEntity(transaction);
-        try {
-            beginTx();
-            updatedEntity.setId(entity.getId());
-            updatedEntity = em.merge(updatedEntity);
-            commitTx();
-        } catch (Exception e) {
-            rollbackTx();
-        }
-        return TransactionConverter.toDto(updatedEntity);
-    }
-
-    public boolean deleteTransaction(Integer id) {
-        TransactionEntity transaction = em.find(TransactionEntity.class, id);
-        if (transaction != null) {
-            try {
-                beginTx();
-                em.remove(transaction);
-                commitTx();
-            } catch (Exception e) {
-                rollbackTx();
-            }
-        } else {
-            return false;
-        }
-        return true;
     }
 
     private void beginTx() {

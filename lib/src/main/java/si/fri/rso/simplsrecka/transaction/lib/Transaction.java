@@ -7,8 +7,8 @@ public class Transaction {
     private Integer id;
     private Integer userId;
     private Double amount;
-    private String type;  // DEPOSIT ali WITHDRAWAL
-    private String status;  // PENDING, COMPLETED, FAILED
+    private String paidCombination;
+    private String type;
     private Instant transactionDate;
 
     public Integer getId() {
@@ -35,20 +35,20 @@ public class Transaction {
         this.amount = amount;
     }
 
+    public String getPaidCombination() {
+        return paidCombination;
+    }
+
+    public void setPaidCombination(String paidCombination) {
+        this.paidCombination = paidCombination;
+    }
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Instant getTransactionDate() {

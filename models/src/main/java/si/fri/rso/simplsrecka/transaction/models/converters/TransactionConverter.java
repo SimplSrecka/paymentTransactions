@@ -10,8 +10,8 @@ public class TransactionConverter {
         dto.setId(entity.getId());
         dto.setUserId(entity.getUserId());
         dto.setAmount(entity.getAmount());
+        dto.setPaidCombination(entity.getPaidCombination());
         dto.setType(entity.getType().toString());
-        dto.setStatus(entity.getStatus().toString());
         dto.setTransactionDate(entity.getTransactionDate());
 
         return dto;
@@ -21,8 +21,8 @@ public class TransactionConverter {
         TransactionEntity entity = new TransactionEntity();
         entity.setUserId(dto.getUserId());
         entity.setAmount(dto.getAmount());
+        entity.setPaidCombination(dto.getPaidCombination());
         entity.setType(TransactionEntity.TransactionType.valueOf(dto.getType()));
-        entity.setStatus(TransactionEntity.TransactionStatus.valueOf(dto.getStatus()));
         entity.setTransactionDate(dto.getTransactionDate());
 
         return entity;
