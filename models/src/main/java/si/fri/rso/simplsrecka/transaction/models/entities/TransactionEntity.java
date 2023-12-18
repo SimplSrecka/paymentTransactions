@@ -2,6 +2,9 @@ package si.fri.rso.simplsrecka.transaction.models.entities;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 @Entity
 @Table(name = "_transaction")
@@ -10,7 +13,9 @@ import java.time.Instant;
                 @NamedQuery(name = "TransactionEntity.getAll",
                         query = "SELECT t FROM TransactionEntity t"),
                 @NamedQuery(name = "TransactionEntity.getByUserId",
-                        query = "SELECT t FROM TransactionEntity t WHERE t.userId = :userId")
+                        query = "SELECT t FROM TransactionEntity t WHERE t.userId = :userId"),
+                @NamedQuery(name = "TransactionEntity.getByDrawDate",
+                        query = "SELECT t FROM TransactionEntity t WHERE t.drawDate = :drawDate")
         })
 public class TransactionEntity {
 
@@ -33,6 +38,9 @@ public class TransactionEntity {
 
     @Column(name = "transaction_date")
     private Instant transactionDate;
+
+    @Column(name = "draw_date")
+    private LocalDate drawDate;
 
 
     public enum TransactionType {
@@ -86,5 +94,13 @@ public class TransactionEntity {
 
     public void setTransactionDate(Instant transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public LocalDate getDrawDate() {
+        return drawDate;
+    }
+
+    public void setDrawDate(LocalDate drawDate) {
+        this.drawDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
     }
 }

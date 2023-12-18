@@ -13,6 +13,7 @@ public class TransactionConverter {
         dto.setPaidCombination(entity.getPaidCombination());
         dto.setType(entity.getType().toString());
         dto.setTransactionDate(entity.getTransactionDate());
+        dto.setDrawDate(entity.getDrawDate());
 
         return dto;
     }
@@ -24,6 +25,7 @@ public class TransactionConverter {
         entity.setPaidCombination(dto.getPaidCombination());
         entity.setType(TransactionEntity.TransactionType.valueOf(dto.getType()));
         entity.setTransactionDate(dto.getTransactionDate());
+        entity.setDrawDate(dto.getDrawDate());
 
         return entity;
     }

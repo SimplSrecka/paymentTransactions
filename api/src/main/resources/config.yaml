@@ -4,18 +4,18 @@ kumuluzee:
     name: dev
   version: 1.0.0
   server:
-    base-url: http://localhost:8082
-    #base-url: http://20.241.221.65:8082
+    #base-url: http://localhost:8082
+    base-url: http://20.124.175.39:8082
     http:
       port: 8082
   datasources:
     - jndi-name: jdbc/TransactionDS
-      connection-url: jdbc:postgresql://localhost:5432/lottery-ticket
+      #connection-url: jdbc:postgresql://localhost:5432/lottery-ticket
       #connection-url: jdbc:postgresql://sqlsimplsrecka.postgres.database.azure.com:5432/lottery-ticket
-      #username: lukaariana
-      #password:  ${{ secrets.AZURE_CREDENTIALS }}
-      username: dbuser
-      password: postgres
+      username: lukaariana
+      password:  ${{ secrets.AZURE_CREDENTIALS }}
+      #username: dbuser
+      #password: postgres
       pool:
         max-size: 4
   dev:
@@ -25,10 +25,10 @@ kumuluzee:
       - transaction-lib
   openapi-mp:
     ui:
-      specification-server: http://localhost:8082
-      #specification-server: http://20.246.199.143:8082
+      #specification-server: http://localhost:8082
+      specification-server: http://20.124.175.39:8082
     swagger-ui:
-      path: /api-specs/ui
+      path: /transaction/api-specs/ui
   health:
     checks:
       data-source-health-check:
@@ -48,8 +48,8 @@ kumuluzee:
                                     <Console name="console" target="SYSTEM_OUT">
                                         <PatternLayout pattern="%d %p %marker %m %X %ex %n"/>
                                     </Console>
-                                    <Socket name="logstash" host="4dd8db1a-6ae2-4cfc-81a7-c9d1cf9dda97-ls.logit.io"
-                                    port="32633" protocol="udp">
+                                    <Socket name="logstash" host="754b7d50-cb52-4b7f-af7f-0a0827e24bef-ls.logit.io"
+                                    port="26348" protocol="udp">
                                         <JSONLayout complete="false" compact="true" eventEol="true" charset="UTF-8" properties="true"/>
                                     </Socket>
                                 </Appenders>

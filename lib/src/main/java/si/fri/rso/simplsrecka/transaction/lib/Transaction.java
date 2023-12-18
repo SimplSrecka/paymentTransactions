@@ -1,6 +1,8 @@
 package si.fri.rso.simplsrecka.transaction.lib;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 public class Transaction {
 
@@ -10,6 +12,7 @@ public class Transaction {
     private String paidCombination;
     private String type;
     private Instant transactionDate;
+    private LocalDate drawDate;
 
     public Integer getId() {
         return id;
@@ -57,6 +60,14 @@ public class Transaction {
 
     public void setTransactionDate(Instant transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public LocalDate getDrawDate() {
+        return drawDate;
+    }
+
+    public void setDrawDate(LocalDate drawDate) {
+        this.drawDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
     }
 
 }
