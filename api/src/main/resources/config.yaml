@@ -11,7 +11,7 @@ kumuluzee:
   datasources:
     - jndi-name: jdbc/TransactionDS
       #connection-url: jdbc:postgresql://localhost:5432/lottery-ticket
-      #connection-url: jdbc:postgresql://sqlsimplsrecka.postgres.database.azure.com:5432/lottery-ticket
+      connection-url: jdbc:postgresql://sqlsimplsrecka.postgres.database.azure.com:5432/lottery-ticket
       username: lukaariana
       password:  ${{ secrets.AZURE_CREDENTIALS }}
       #username: dbuser
