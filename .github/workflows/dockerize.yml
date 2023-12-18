@@ -38,25 +38,25 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/transaction:${{ steps.current-time.outputs.formattedTime }}
 
-#      - name: Install kubectl
-#        run: |
-#          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-#          chmod +x ./kubectl
-#          sudo mv ./kubectl /usr/local/bin/kubectl
-#
-#      - name: Connect to Azure
-#        uses: azure/login@v1
-#        with:
-#          creds: ${{ secrets.AZURE_CREDENTIALS }}
-#
-#      - name: Set AKS context
-#        uses: azure/aks-set-context@v1
-#        with:
-#          creds: ${{ secrets.AZURE_CREDENTIALS }}
-#          cluster-name: SimplSrecka
-#          resource-group: RSO
-#
-#      - name: Deploy to AKS
-#        run: |
-#          kubectl set image deployment/transaction-deployment transaction=lb4684/transaction:${{ steps.current-time.outputs.formattedTime }}
-#          kubectl rollout status deployment/transaction-deployment
+      - name: Install kubectl
+        run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+      - name: Connect to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          cluster-name: SimplSrecka
+          resource-group: RSO
+
+      - name: Deploy to AKS
+        run: |
+          kubectl set image deployment/transaction-deployment transaction=lb4684/transaction:${{ steps.current-time.outputs.formattedTime }}
+          kubectl rollout status deployment/transaction-deployment
