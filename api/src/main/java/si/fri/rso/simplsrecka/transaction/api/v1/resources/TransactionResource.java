@@ -13,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import si.fri.rso.simplsrecka.transaction.lib.Transaction;
+import si.fri.rso.simplsrecka.transaction.lib.CombinedTransactionLotteryResult;
 import si.fri.rso.simplsrecka.transaction.services.beans.TransactionBean;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -80,7 +81,7 @@ public class TransactionResource {
     public Response getTransactions(@Parameter(description = "User ID.", required = true)
                                    @PathParam("userId") Integer userId) {
         try {
-            List<Transaction> transactions = transactionBean.getTransactions(userId);
+            List<CombinedTransactionLotteryResult> transactions = transactionBean.getTransactions(userId);
             if (transactions.isEmpty()) {
                 return Response.status(Response.Status.NOT_FOUND).entity("No transactions found for user ID: " + userId).build();
             }

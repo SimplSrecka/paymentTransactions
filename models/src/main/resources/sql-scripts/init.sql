@@ -1,2 +1,2 @@
-INSERT INTO _transaction (user_id, amount, type, paid_combination, transaction_date, draw_date) VALUES (1, 20.0, 'DEPOSIT_COMBINATION', '1,2,5,9,5,10', TIMESTAMP '2023-01-01 10:00:00', '2023-12-17');
-INSERT INTO _transaction (user_id, amount, type, paid_combination, transaction_date, draw_date) VALUES (1, 50.0, 'DEPOSIT_COMBINATION', '1,2,5,9,5,10', TIMESTAMP '2023-01-01 10:00:00', '2023-12-17');
+INSERT INTO _transaction (user_id, ticket_id, amount, type, paid_combination, transaction_date, draw_date) VALUES (2, 1, 20.0, 'DEPOSIT_COMBINATION', '1,2,5,9,5,10', TIMESTAMP '2023-01-01 10:00:00', '2023-03-15');
+INSERT INTO _transaction (user_id, ticket_id, amount, type, paid_combination, transaction_date, draw_date) VALUES (2, 1, 50.0, 'DEPOSIT_COMBINATION', '1,2,5,9,5,10', TIMESTAMP '2023-01-01 10:00:00', '2023-12-17');

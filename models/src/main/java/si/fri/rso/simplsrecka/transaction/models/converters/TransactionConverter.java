@@ -9,6 +9,7 @@ public class TransactionConverter {
         Transaction dto = new Transaction();
         dto.setId(entity.getId());
         dto.setUserId(entity.getUserId());
+        dto.setTicketId(entity.getTicketId());
         dto.setAmount(entity.getAmount());
         dto.setPaidCombination(entity.getPaidCombination());
         dto.setType(entity.getType().toString());
@@ -21,6 +22,7 @@ public class TransactionConverter {
     public static TransactionEntity toEntity(Transaction dto) {
         TransactionEntity entity = new TransactionEntity();
         entity.setUserId(dto.getUserId());
+        entity.setTicketId(dto.getTicketId());
         entity.setAmount(dto.getAmount());
         entity.setPaidCombination(dto.getPaidCombination());
         entity.setType(TransactionEntity.TransactionType.valueOf(dto.getType()));

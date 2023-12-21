@@ -8,6 +8,7 @@ public class Transaction {
 
     private Integer id;
     private Integer userId;
+    private Integer ticketId;
     private Double amount;
     private String paidCombination;
     private String type;
@@ -28,6 +29,14 @@ public class Transaction {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public void setTicketId(Integer ticketId) {
+        this.ticketId = ticketId;
+    }
+
+    public Integer getTicketId() {
+        return ticketId;
     }
 
     public Double getAmount() {

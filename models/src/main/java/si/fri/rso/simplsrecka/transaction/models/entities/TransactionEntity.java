@@ -26,6 +26,9 @@ public class TransactionEntity {
     @Column(name = "user_id")
     private Integer userId;
 
+    @Column(name = "ticket_id")
+    private Integer ticketId;
+
     @Column(name = "amount")
     private Double amount;
 
@@ -62,6 +65,14 @@ public class TransactionEntity {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(Integer ticketId) {
+        this.ticketId = ticketId;
     }
 
     public String getPaidCombination() {
