@@ -38,10 +38,10 @@ kumuluzee:
       disk-space-health-check:
         threshold: 100000000
         type: liveness
-  metrics:
-    web-instrumentation:
-      - name: transaction-endpoint
-        url-pattern: /v1/transaction/*
+#  metrics:
+#    web-instrumentation:
+#      - name: transaction-endpoint
+#        url-pattern: /v1/transaction/*
   logs:
     config-file: '<?xml version="1.0" encoding="UTF-8"?>
                             <Configuration name="SimplSrecka">
