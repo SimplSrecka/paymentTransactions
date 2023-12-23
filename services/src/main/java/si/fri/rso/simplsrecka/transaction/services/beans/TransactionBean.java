@@ -58,7 +58,7 @@ public class TransactionBean {
         return resultList.stream().map(TransactionConverter::toDto).collect(Collectors.toList());
     }
 
-    @Timed(name = "get_user_transactions")
+    //@Timed(name = "get_user_transactions")
     @Timeout(value = 10, unit = ChronoUnit.SECONDS)
     @CircuitBreaker(requestVolumeThreshold = 3)
     @Fallback(fallbackMethod = "getTransactionsFallback")
@@ -106,7 +106,7 @@ public class TransactionBean {
         return new ArrayList<>();
     }
 
-    @Metered(name = "create_transaction")
+    //@Metered(name = "create_transaction")
     public Transaction createTransaction(Transaction transaction) {
         TransactionEntity transactionEntity = TransactionConverter.toEntity(transaction);
         try {
