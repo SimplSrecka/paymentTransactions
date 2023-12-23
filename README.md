@@ -7,6 +7,8 @@
 * Nalaganje denarja
 * Spreminjanje stanja
 
+### API Swagger:
+* http://52.226.192.46/transaction/api-specs/ui/?url=http://52.226.192.46/transaction/openapi&oauth2RedirectUrl=http://52.226.192.46/transaction/api-specs/ui/oauth2-redirect.html
 
 ## Zagon in Testiranje
 
