@@ -46,7 +46,7 @@ public class TransactionBean {
     @PostConstruct
     private void init() {
         httpClient = ClientBuilder.newClient();
-        APITransactionURL = "http://localhost:8083";
+        APITransactionURL = "http://52.226.192.46/lottery-drawing-results";
     }
 
     @Inject
