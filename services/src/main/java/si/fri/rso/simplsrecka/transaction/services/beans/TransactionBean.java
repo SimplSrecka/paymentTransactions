@@ -84,15 +84,13 @@ public class TransactionBean {
                         && res.getDrawingDate().equals(transaction.getDrawDate().toString())) {
                     CombinedTransactionLotteryResult combined = combineData(transaction, res);
                     combinedResults.add(combined);
-                } else {
-                    LotteryResult emp = new LotteryResult();
-                    CombinedTransactionLotteryResult combined = combineData(transaction, emp);
-                    combinedResults.add(combined);
                 }
             } catch (WebApplicationException e) {
                 if (e.getResponse().getStatus() == 404) {
                     log.info("No lottery drawing found for ticketId: " + transaction.getTicketId());
-                    continue;
+                    LotteryResult emp = new LotteryResult();
+                    CombinedTransactionLotteryResult combined = combineData(transaction, emp);
+                    combinedResults.add(combined);
                 } else {
                     log.severe(e.getMessage());
                     throw new InternalServerErrorException(e);
