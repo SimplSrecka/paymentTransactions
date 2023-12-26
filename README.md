@@ -5,8 +5,6 @@
 * Pridobi vse transakcije izbranega uporabnika
 * Dodaj novo transakcijo
 
-### API Swagger:
-* http://52.226.192.46/transaction/api-specs/ui/?url=http://52.226.192.46/transaction/openapi&oauth2RedirectUrl=http://52.226.192.46/transaction/api-specs/ui/oauth2-redirect.html
 
 #### API dokumentacija je na voljo [tukaj](http://52.226.192.46/transaction/openapi)
 #### API Swagger (UI) je na voljo [tukaj](http://52.226.192.46/transaction/api-specs/ui/?url=http://52.226.192.46/transaction/openapi&oauth2RedirectUrl=http://52.226.192.46/transaction/api-specs/ui/oauth2-redirect.html)
