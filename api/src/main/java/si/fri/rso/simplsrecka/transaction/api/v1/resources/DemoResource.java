@@ -1,15 +1,16 @@
 package si.fri.rso.simplsrecka.transaction.api.v1.resources;
 
-import si.fri.rso.simplsrecka.transaction.services.config.RestProperties;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import si.fri.rso.simplsrecka.transaction.lib.CombinedTransactionLotteryResult;
+import si.fri.rso.simplsrecka.transaction.services.beans.TransactionBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -21,14 +22,21 @@ public class DemoResource {
     private Logger log = Logger.getLogger(DemoResource.class.getName());
 
     @Inject
-    private RestProperties restProperties;
+    private TransactionBean transactionBean;
 
-    @POST
-    @Path("break")
-    public Response makeUnhealthy() {
-
-        restProperties.setBroken(true);
-
-        return Response.status(Response.Status.OK).build();
+    @GET
+    @Path("/{userId}")
+    public Response demo(@Parameter(description = "User ID.", required = true)
+                                    @PathParam("userId") Integer userId) {
+        try {
+            List<CombinedTransactionLotteryResult> transactions = transactionBean.demo(userId);
+            if (transactions.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No transactions found for user ID: " + userId).build();
+            }
+            return Response.ok(transactions).build();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error fetching transactions for user", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

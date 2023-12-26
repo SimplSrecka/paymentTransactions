@@ -102,7 +102,43 @@ public class TransactionBean {
         return combinedResults;
     }
 
+    @Timeout(value = 10, unit = ChronoUnit.SECONDS)
+    @CircuitBreaker(requestVolumeThreshold = 3)
+    @Fallback(fallbackMethod = "getTransactionsFallback")
+    public List<CombinedTransactionLotteryResult> demo(Integer userId) {
+        TypedQuery<TransactionEntity> query = em.createNamedQuery("TransactionEntity.getByUserId", TransactionEntity.class);
+        query.setParameter("userId", userId);
+        List<TransactionEntity> resultList = query.getResultList();
+
+        List<CombinedTransactionLotteryResult> combinedResults = new ArrayList<>();
+
+        for (TransactionEntity transaction : resultList) {
+            try {
+                String url = APITransactionURL + "/v1/lotteryResultssss/" + transaction.getTicketId() + "?drawingDate=" +
+                        transaction.getDrawDate().toString();
+                System.out.println(url);
+                List<LotteryResult> lotteryResults = httpClient
+                        .target(url)
+                        .request()
+                        .get(new GenericType<List<LotteryResult>>() {});
+
+                LotteryResult res = lotteryResults.get(0);
+                if (res.getTicketId() == transaction.getTicketId()
+                        && res.getDrawingDate().equals(transaction.getDrawDate().toString())) {
+                    CombinedTransactionLotteryResult combined = combineData(transaction, res);
+                    combinedResults.add(combined);
+                }
+            } catch (ProcessingException | WebApplicationException e) {
+                log.severe(e.getMessage());
+                throw new InternalServerErrorException(e);
+            }
+        }
+
+        return combinedResults;
+    }
+
     public List<CombinedTransactionLotteryResult> getTransactionsFallback(Integer userId) {
+        System.out.println("fallback");
         return new ArrayList<>();
     }
 

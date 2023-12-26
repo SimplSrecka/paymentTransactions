@@ -13,7 +13,6 @@ kumuluzee:
       connection-url: jdbc:postgresql://sqlsimplsrecka.postgres.database.azure.com:5432/lottery-ticket
       username: lukaariana
       password: ${{ secrets.AZURE_CREDENTIALS }}
-      #password: XonaryLu99
       #username: dbuser
       #password: postgres
       pool:
@@ -40,7 +39,7 @@ kumuluzee:
 #  metrics:
 #    web-instrumentation:
 #      - name: transaction-endpoint
-#        url-pattern: /v1/transaction/*
+#        url-pattern: /v1/transactions/*
   logs:
     config-file: '<?xml version="1.0" encoding="UTF-8"?>
                             <Configuration name="SimplSrecka">
@@ -48,8 +47,8 @@ kumuluzee:
                                     <Console name="console" target="SYSTEM_OUT">
                                         <PatternLayout pattern="%d %p %marker %m %X %ex %n"/>
                                     </Console>
-                                    <Socket name="logstash" host="754b7d50-cb52-4b7f-af7f-0a0827e24bef-ls.logit.io"
-                                    port="26348" protocol="udp">
+                                    <Socket name="logstash" host="ce34edf9-867c-4db8-a4b0-274615f77e3f-ls.logit.io"
+                                    port="19822" protocol="udp">
                                         <JSONLayout complete="false" compact="true" eventEol="true" charset="UTF-8" properties="true"/>
                                     </Socket>
                                 </Appenders>
