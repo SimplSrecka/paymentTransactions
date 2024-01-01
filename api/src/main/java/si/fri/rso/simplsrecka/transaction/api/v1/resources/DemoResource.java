@@ -39,4 +39,20 @@ public class DemoResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GET
+    @Path("/fallback/{userId}")
+    public Response demo_fallback(@Parameter(description = "User ID.", required = true)
+                         @PathParam("userId") Integer userId) {
+        try {
+            List<CombinedTransactionLotteryResult> transactions = transactionBean.demo_fallback(userId);
+            if (transactions.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No transactions found for user ID: " + userId).build();
+            }
+            return Response.ok(transactions).build();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error fetching transactions for user", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
