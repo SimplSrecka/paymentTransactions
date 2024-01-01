@@ -141,7 +141,26 @@ public class TransactionBean {
 
     public List<CombinedTransactionLotteryResult> getTransactionsFallback(Integer userId) {
         System.out.println("fallback");
-        return new ArrayList<>();
+
+        CombinedTransactionLotteryResult exampleResult = new CombinedTransactionLotteryResult();
+        exampleResult.setAmount(100.0);
+        exampleResult.setDrawDate("2024-01-01");
+        exampleResult.setId(1);
+        exampleResult.setPaidCombination("1,2,3,4,5");
+        exampleResult.setTicketId(12345);
+        exampleResult.setTransactionDate("2024-01-01");
+        exampleResult.setType("PURCHASE");
+        exampleResult.setUserId(userId);
+        exampleResult.setLotteryDrawingDate("2024-01-01");
+        exampleResult.setLotteryId(1);
+        exampleResult.setLotteryCategory("Category 1");
+        exampleResult.setTotalPrize(5000);
+        exampleResult.setWinningCombination("5,10,15,20,25");
+
+        List<CombinedTransactionLotteryResult> results = new ArrayList<>();
+        results.add(exampleResult);
+
+        return results;
     }
 
     //@Metered(name = "create_transaction")
