@@ -25,7 +25,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 @Log
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
 @CrossOrigin(supportedMethods = "GET, POST, PUT, DELETE, HEAD, OPTIONS", allowOrigin = "*")
 public class TransactionResource {
 
-    private Logger log = Logger.getLogger(TransactionResource.class.getName());
+    private Logger log = LogManager.getLogger(TransactionResource.class.getName());
 
     @Inject
     private TransactionBean transactionBean;
@@ -61,7 +62,7 @@ public class TransactionResource {
             List<Transaction> transactions = transactionBean.getAllTransactions();
             return Response.ok(transactions).build();
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error fetching transactions", e);
+            log.error("Error creating transaction", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -87,7 +88,7 @@ public class TransactionResource {
             }
             return Response.ok(transactions).build();
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error fetching transactions for user", e);
+            log.error("Error creating transaction", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -113,7 +114,7 @@ public class TransactionResource {
             transaction = transactionBean.createTransaction(transaction);
             return Response.status(Response.Status.CREATED).entity(transaction).build();
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error creating transaction", e);
+            log.error("Error creating transaction", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
